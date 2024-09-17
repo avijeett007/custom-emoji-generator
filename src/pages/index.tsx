@@ -1,24 +1,59 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Button } from "@/components/ui/button"
+import Image from 'next/image'
+import { SignInButton } from '@/components/auth/SignInButton'
+import { SignUpButton } from '@/components/auth/SignUpButton'
+import UserProfile from '@/components/UserProfile'
+import { useUser } from '@clerk/nextjs'
+import { Hero } from '@/components/landing/Hero'
+import { Features } from '@/components/landing/Features'
+import { Pricing } from '@/components/landing/Pricing'
 
 const Home: NextPage = () => {
+  const { isSignedIn, isLoaded } = useUser();
+
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Head>
-        <title>Custom Emoji Generator</title>
+        <title>YouMoji - Custom Emoji Generator</title>
         <meta name="description" content="Generate custom emojis for your YouTube channel" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Custom Emoji Generator</h1>
-        <Button>Get Started</Button>
-        {/* TODO: Add main content */}
+      <header className="bg-white shadow-sm">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <Image 
+              src="/images/logo.png" 
+              alt="YouMoji Logo" 
+              width={40} 
+              height={40}
+            />
+            <h1 className="text-2xl font-bold">YouMoji</h1>
+          </div>
+          {isLoaded && (
+            isSignedIn ? (
+              <UserProfile />
+            ) : (
+              <div className="space-x-4">
+                <SignInButton />
+                <SignUpButton />
+              </div>
+            )
+          )}
+        </div>
+      </header>
+
+      <main className="flex-grow">
+        <Hero />
+        <Features />
+        <Pricing />
       </main>
 
-      <footer className="container mx-auto px-4 py-8">
-        {/* TODO: Add footer content */}
+      <footer className="bg-gray-100 py-8">
+        <div className="container mx-auto px-4 text-center">
+          <p>&copy; 2024 YouMoji. All rights reserved.</p>
+        </div>
       </footer>
     </div>
   )

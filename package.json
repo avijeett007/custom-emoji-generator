@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.5.3",
+    "@clerk/nextjs": "^5.5.4",
     "@fal-ai/serverless-client": "^0.14.2",
     "@prisma/client": "^5.19.1",
     "@radix-ui/react-dialog": "^1.1.1",

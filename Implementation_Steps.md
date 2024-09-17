@@ -2,8 +2,8 @@
 
 First, let's outline the steps we'll follow to build the complete SaaS app:
 
-Set up authentication with Clerk
-Implement the landing page
+Set up authentication with Clerk - Done
+Implement the landing page - Done
 Create the dashboard page
 Develop the emoji generation feature
 Implement the credit system
@@ -16,7 +16,7 @@ Finalize and optimize the application
 
 # Detailed Steps
 
-### Set up authentication with Clerk:
+### Set up authentication with Clerk: - Done
 
 - Install Clerk: npm install @clerk/nextjs
 - Set up Clerk provider in src/pages/_app.tsx
@@ -24,7 +24,7 @@ Finalize and optimize the application
 - Implement protected routes
 
 
-### Implement the landing page:
+### Implement the landing page: - Done
 
 - Create src/components/landing/ components
 - Update src/pages/index.tsx with landing page content

@@ -4,7 +4,14 @@ import '@/styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ClerkProvider {...pageProps}>
+    <ClerkProvider 
+      appearance={{
+        elements: {
+          footer: 'hidden',
+        },
+      }}
+      {...pageProps}
+    >
       <Component {...pageProps} />
     </ClerkProvider>
   )
