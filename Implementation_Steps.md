@@ -4,7 +4,7 @@ First, let's outline the steps we'll follow to build the complete SaaS app:
 
 Set up authentication with Clerk - Done
 Implement the landing page - Done
-Create the dashboard page
+Create the dashboard page - Done
 Develop the emoji generation feature
 Implement the credit system
 Add file upload functionality with UploadThing
@@ -30,7 +30,7 @@ Finalize and optimize the application
 - Update src/pages/index.tsx with landing page content
 
 
-### Create the dashboard page:
+### Create the dashboard page: - Done
 
 - Implement src/pages/dashboard.tsx
 - Create src/components/dashboard/ components

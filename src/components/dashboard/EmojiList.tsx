@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Emoji } from '@/types/emoji';
 
 interface EmojiListProps {
@@ -6,14 +7,24 @@ interface EmojiListProps {
 }
 
 export const EmojiList: React.FC<EmojiListProps> = ({ emojis }) => {
+  if (emojis.length === 0) {
+    return <p>You haven't generated any emojis yet. Start creating!</p>;
+  }
+
   return (
-    <div>
-      <h2>Your Emojis</h2>
-      <ul>
-        {emojis.map((emoji) => (
-          <li key={emoji.id}>{/* Render emoji */}</li>
-        ))}
-      </ul>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      {emojis.map((emoji) => (
+        <div key={emoji.id} className="flex flex-col items-center">
+          <Image 
+            src={emoji.imageUrl} 
+            alt={emoji.emotion} 
+            width={64} 
+            height={64} 
+            className="rounded-full"
+          />
+          <p className="mt-2 text-sm">{emoji.emotion}</p>
+        </div>
+      ))}
     </div>
   );
 };
