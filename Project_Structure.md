@@ -29,12 +29,13 @@ custom-emoji-generator/
 │   │   │   └── Layout.tsx
 │   │   ├── profile/
 │   │   │   └── ProfileForm.tsx
-│   │   └── ui/
-│   │       ├── button.tsx
-│   │       ├── input.tsx
-│   │       └── dialog.tsx
-│   │       └── dropdown-menu.tsx
-│   │       └── card.tsx
+│   │   ├── ui/
+│   │   │   ├── button.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── dropdown-menu.tsx
+│   │   │   └── card.tsx
+│   │   └── UserProfile.tsx  // New component
 │   ├── hooks/
 │   │   ├── useCredits.ts
 │   │   └── useEmojiGeneration.ts
@@ -52,24 +53,31 @@ custom-emoji-generator/
 │   │   │   ├── credits/
 │   │   │   │   └── purchase.ts
 │   │   │   └── uploadthing.ts
+│   │   ├── sign-in/
+│   │   │   └── [[...index]].tsx  // New file
+│   │   ├── sign-up/
+│   │   │   └── [[...index]].tsx  // New file
+│   │   ├── _app.tsx  // Updated
 │   │   ├── dashboard.tsx
-│   │   ├── index.tsx
+│   │   ├── index.tsx  // Updated
 │   │   ├── profile.tsx
 │   │   └── showcase.tsx
 │   ├── styles/
 │   │   └── globals.css
-│   └── types/
-│       ├── emoji.ts
-│       └── user.ts
+│   ├── types/
+│   │   ├── emoji.ts
+│   │   └── user.ts
+│   └── middleware.ts  // New file
 ├── tests/
 │   ├── components/
 │   └── pages/
 ├── .env
+├── .env.local  // New file (not tracked in git)
 ├── .env.example
 ├── .eslintrc.json
 ├── .gitignore
 ├── components.json
-├── next.config.mjs
+├── next.config.mjs  // Updated
 ├── package.json
 ├── README.md
 ├── tailwind.config.js
