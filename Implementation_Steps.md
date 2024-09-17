@@ -5,7 +5,7 @@ First, let's outline the steps we'll follow to build the complete SaaS app:
 Set up authentication with Clerk - Done
 Implement the landing page - Done
 Create the dashboard page - Done
-Develop the emoji generation feature
+Develop the emoji generation feature - Done
 Implement the credit system
 Add file upload functionality with UploadThing
 Create user profile management
@@ -36,7 +36,7 @@ Finalize and optimize the application
 - Create src/components/dashboard/ components
 
 
-### Develop the emoji generation feature:
+### Develop the emoji generation feature: - Done
 
 - Create src/components/emoji/EmojiGenerator.tsx
 - Implement src/pages/api/emoji/generate.ts

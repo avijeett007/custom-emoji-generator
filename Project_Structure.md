@@ -47,6 +47,7 @@ custom-emoji-generator/
 │   │   ├── db.ts
 │   │   ├── uploadthing.ts
 │   │   └── utils.ts
+│   │   └── fal.ts
 │   ├── pages/
 │   │   ├── api/
 │   │   │   ├── auth/
