@@ -26,7 +26,8 @@ custom-emoji-generator/
 │   │   ├── layout/
 │   │   │   ├── Footer.tsx
 │   │   │   ├── Header.tsx
-│   │   │   └── Layout.tsx
+│   │   │   ├── Layout.tsx
+│   │   │   └── DashboardLayout.tsx  // New component
 │   │   ├── profile/
 │   │   │   └── ProfileForm.tsx
 │   │   ├── ui/
@@ -34,8 +35,11 @@ custom-emoji-generator/
 │   │   │   ├── input.tsx
 │   │   │   ├── dialog.tsx
 │   │   │   ├── dropdown-menu.tsx
-│   │   │   └── card.tsx
-│   │   └── UserProfile.tsx  // New component
+│   │   │   ├── card.tsx
+│   │   │   ├── checkbox.tsx  // New component
+│   │   │   └── label.tsx  // New component
+│   │   ├── UserProfile.tsx
+│   │   └── ThemeToggle.tsx  // New component
 │   ├── hooks/
 │   │   ├── useCredits.ts
 │   │   └── useEmojiGeneration.ts
@@ -54,12 +58,12 @@ custom-emoji-generator/
 │   │   │   │   └── purchase.ts
 │   │   │   └── uploadthing.ts
 │   │   ├── sign-in/
-│   │   │   └── [[...index]].tsx  // New file
+│   │   │   └── [[...index]].tsx
 │   │   ├── sign-up/
-│   │   │   └── [[...index]].tsx  // New file
-│   │   ├── _app.tsx  // Updated
+│   │   │   └── [[...index]].tsx
+│   │   ├── _app.tsx  // Updated with ThemeProvider
 │   │   ├── dashboard.tsx
-│   │   ├── index.tsx  // Updated
+│   │   ├── index.tsx
 │   │   ├── profile.tsx
 │   │   └── showcase.tsx
 │   ├── styles/
@@ -67,44 +71,40 @@ custom-emoji-generator/
 │   ├── types/
 │   │   ├── emoji.ts
 │   │   └── user.ts
-│   └── middleware.ts  // New file
+│   └── middleware.ts
 ├── tests/
 │   ├── components/
 │   └── pages/
 ├── .env
-├── .env.local  // New file (not tracked in git)
+├── .env.local
 ├── .env.example
 ├── .eslintrc.json
 ├── .gitignore
 ├── components.json
-├── next.config.mjs  // Updated
+├── next.config.mjs
 ├── package.json
 ├── README.md
 ├── tailwind.config.js
 └── tsconfig.json
 ```
 
-This structure reflects a complete SaaS application with all the features mentioned in the master plan. Each directory and file has a specific purpose:
+This updated structure reflects the recent changes and additions to the Custom Emoji Generator application. Key updates include:
 
-- `prisma/`: Contains the database schema and migrations.
-- `public/`: Stores static assets like images and the favicon.
-- `src/`: The main source directory for the application code.
-  - `components/`: React components organized by feature or page.
-  - `hooks/`: Custom React hooks for shared logic.
-  - `lib/`: Utility functions and shared code.
-  - `pages/`: Next.js pages and API routes.
-  - `styles/`: Global styles and Tailwind CSS configuration.
-  - `types/`: TypeScript type definitions.
-- `tests/`: Contains test files for components and pages.
+- New components:
+  - `src/components/layout/DashboardLayout.tsx`: The new layout component for the dashboard.
+  - `src/components/ThemeToggle.tsx`: The dark mode toggle component.
+  - `src/components/ui/checkbox.tsx` and `src/components/ui/label.tsx`: New UI components from shadcn/ui.
 
-Key files:
-- `src/pages/index.tsx`: The landing page.
-- `src/pages/dashboard.tsx`: The main dashboard for authenticated users.
-- `src/pages/profile.tsx`: User profile management page.
-- `src/pages/showcase.tsx`: Public showcase of generated emojis.
-- `src/components/emoji/EmojiGenerator.tsx`: The main component for generating emojis.
-- `src/hooks/useEmojiGeneration.ts`: Custom hook for emoji generation logic.
-- `src/lib/db.ts`: Database client initialization and helpers.
-- `src/lib/uploadthing.ts`: Configuration for file uploads.
+- Updated files:
+  - `src/pages/_app.tsx`: Now includes the ThemeProvider for dark mode support.
+  - `src/components/emoji/EmojiGenerator.tsx`: Updated with new file upload logic and UI improvements.
 
-This structure provides a scalable and organized foundation for your SaaS application.
+The overall structure remains organized and scalable, with components, hooks, and pages clearly separated. This structure supports the application's features, including:
+
+- User authentication and dashboard
+- Emoji generation and management
+- Credit system
+- Theme toggling (dark/light mode)
+- Responsive layout for various screen sizes
+
+As the application continues to evolve, this structure provides a solid foundation for adding new features and maintaining existing ones.
