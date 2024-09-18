@@ -8,8 +8,14 @@ import { useUser } from '@clerk/nextjs'
 import { Hero } from '@/components/landing/Hero'
 import { Features } from '@/components/landing/Features'
 import { Pricing } from '@/components/landing/Pricing'
+import { PublicEmojiShowcase } from '@/components/landing/PublicEmojiShowcase'
+import prisma from '@/lib/db'
 
-const Home: NextPage = () => {
+interface HomeProps {
+  publicEmojis: Array<{ id: string; imageUrl: string; emotion: string }>;
+}
+
+const Home: NextPage<HomeProps> = ({ publicEmojis }) => {
   const { isSignedIn, isLoaded } = useUser();
 
   return (
@@ -47,6 +53,7 @@ const Home: NextPage = () => {
       <main className="flex-grow">
         <Hero />
         <Features />
+        <PublicEmojiShowcase emojis={publicEmojis} />
         <Pricing />
       </main>
 
@@ -57,6 +64,20 @@ const Home: NextPage = () => {
       </footer>
     </div>
   )
+}
+
+export async function getServerSideProps() {
+  const publicEmojis = await prisma.emoji.findMany({
+    where: { isPublic: true },
+    select: { id: true, imageUrl: true, emotion: true },
+    take: 12, // Limit to 12 emojis for the showcase
+  });
+
+  return {
+    props: {
+      publicEmojis,
+    },
+  };
 }
 
 export default Home

@@ -8,10 +8,8 @@ export const CreditDisplay: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <p className="text-2xl font-bold mb-4">
-        {state.credits > 0 ? `` : 'No Credits Left'}
-      </p>
-      <br/>
+      <AnimatedCreditDisplay />
+      {state.credits === 0 && <p className="text-2xl font-bold mb-4">No Credits Left</p>}
       <CreditPurchaseModal tier={state.tier} />
     </div>
   );
