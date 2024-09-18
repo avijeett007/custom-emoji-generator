@@ -1,14 +1,26 @@
+// src/pages/dashboard.tsx
 import React, { useState } from 'react';
-import { GetServerSideProps } from 'next';
-import { getAuth } from '@clerk/nextjs/server';
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { EmojiGenerator } from '@/components/emoji/EmojiGenerator';
-import { CreditDisplay } from '@/components/dashboard/CreditDisplay';
-import { EmojiList } from '@/components/dashboard/EmojiList';
+import { CreditMenu } from '@/components/dashboard/CreditMenu';
+import { EmojiSlider } from '@/components/dashboard/EmojiSlider';
 import { Emoji } from '@/types/emoji';
 
 const Dashboard: React.FC = () => {
   const [newEmoji, setNewEmoji] = useState<Emoji | undefined>(undefined);
+  const { isLoaded, isSignedIn } = useUser();
+  const router = useRouter();
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isSignedIn) {
+    router.push("/sign-in");
+    return null;
+  }
 
   const handleEmojiGenerated = (emoji: Emoji) => {
     setNewEmoji(emoji);
@@ -22,31 +34,16 @@ const Dashboard: React.FC = () => {
             <EmojiGenerator onEmojiGenerated={handleEmojiGenerated} />
           </div>
           <div>
-            <CreditDisplay />
+            <CreditMenu />
           </div>
         </div>
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Your Emojis</h2>
-          <EmojiList newEmoji={newEmoji} />
+          <EmojiSlider newEmoji={newEmoji} />
         </div>
       </div>
     </DashboardLayout>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { userId } = getAuth(ctx.req);
-
-  if (!userId) {
-    return {
-      redirect: {
-        destination: '/sign-in',
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
 };
 
 export default Dashboard;

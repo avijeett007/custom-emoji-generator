@@ -18,6 +18,9 @@ custom-emoji-generator/
 │   │   ├── dashboard/
 │   │   │   ├── CreditDisplay.tsx
 │   │   │   └── EmojiList.tsx
+│   │   │   └── EmojiList.tsx
+│   │   │   └── history.tsx
+│   │   │   └── CreditMenu.tsx
 │   │   ├── emoji/
 │   │   │   ├── EmojiGenerator.tsx
 │   │   │   └── EmojiPreview.tsx
@@ -76,6 +79,9 @@ custom-emoji-generator/
 │   │   │   └── [[...index]].tsx
 │   │   ├── sign-up/
 │   │   │   └── [[...index]].tsx
+│   │   ├── dashboard/
+│   │   │   └── credit.tsx
+│   │   │   └── history.tsx
 │   │   ├── _app.tsx
 │   │   ├── dashboard.tsx
 │   │   ├── index.tsx

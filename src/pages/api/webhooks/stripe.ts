@@ -47,7 +47,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         } else if (purchaseType === 'premium') {
           await prisma.user.update({
             where: { id: userId },
-            data: { tier: 'PREMIUM' },
+            data: { tier: 'PREMIUM', credits: { increment: 30 } },
           });
         }
       } else {
