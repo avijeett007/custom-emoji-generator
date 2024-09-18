@@ -73,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         image_url: falUploadResponse,
         prompt: emotion,
         image_size: "square",
-        num_inference_steps: 10,
+        num_inference_steps: 20,
         guidance_scale: 7.5,
       },
     }) as FalAIResponse;

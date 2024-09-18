@@ -8,7 +8,7 @@ Create the dashboard page - Done
 Develop the emoji generation feature - Done
 Implement the credit system - Done
 Add file upload functionality with UploadThing - Done
-Create user profile management
+Create user profile management - Done
 Implement the public emoji showcase
 Add premium features and upgrade flow
 Finalize and optimize the application
@@ -57,7 +57,7 @@ Finalize and optimize the application
 - Implement file upload in EmojiGenerator component
 
 
-### Create user profile management:
+### Create user profile management: Done
 
 - Implement src/pages/profile.tsx
 - Create src/components/profile/ProfileForm.tsx

@@ -56,8 +56,8 @@ export const EmojiGenerator: React.FC<EmojiGeneratorProps> = ({ onEmojiGenerated
       setError('Please select an emotion.');
       return;
     }
-    if (state.credits <= 0 && state.tier !== 'PREMIUM') {
-      setError('Not enough credits. Please purchase more or upgrade to Premium.');
+    if (state.credits <= 0) {
+      setError('Not enough credits. Please purchase more. Premium members get twice more credit.');
       return;
     }
 

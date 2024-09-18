@@ -1,8 +1,9 @@
+// src/components/layout/DashboardLayout.tsx
 import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { useUser } from '@clerk/nextjs';
+import { UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
-import { Home, Layers, CreditCard, History, User } from 'lucide-react';
+import { Home, CreditCard, History } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface DashboardLayoutProps {
@@ -10,8 +11,6 @@ interface DashboardLayoutProps {
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
-  const { user } = useUser();
-
   return (
     <div className="flex h-screen bg-background">
       <motion.aside
@@ -22,23 +21,19 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         <nav className="space-y-4">
           <Link href="/dashboard" className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
             <Home size={20} />
-            <span>Home</span>
-          </Link>
-          <Link href="/dashboard/category" className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
-            <Layers size={20} />
-            <span>Category</span>
+            <span>Dashboard</span>
           </Link>
           <Link href="/dashboard/credit" className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
             <CreditCard size={20} />
-            <span>Credit</span>
+            <span>Credits</span>
           </Link>
           <Link href="/dashboard/history" className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
             <History size={20} />
             <span>History</span>
           </Link>
-          <Link href="/dashboard/profile" className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
-            <User size={20} />
-            <span>Profile</span>
+          <Link href="/" className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
+            <Home size={20} />
+            <span>Home</span>
           </Link>
         </nav>
       </motion.aside>
@@ -47,7 +42,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <span>Welcome, {user?.firstName}!</span>
+            <UserButton afterSignOutUrl="/" />
           </div>
         </header>
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background">

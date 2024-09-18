@@ -1,17 +1,22 @@
+// src/components/dashboard/EmojiList.tsx
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Emoji } from '@/types/emoji';
-import { Download } from 'lucide-react';
+import { Download, Heart, ThumbsDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/router';
+import { useCredits } from '@/hooks/useCredits';
 
 interface EmojiListProps {
-  newEmoji?: Emoji;
+  showActions?: boolean;
 }
 
-export const EmojiList: React.FC<EmojiListProps> = ({ newEmoji }) => {
+export const EmojiList: React.FC<EmojiListProps> = ({ showActions = false }) => {
   const [emojis, setEmojis] = useState<Emoji[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { tier } = useCredits();
 
   useEffect(() => {
     const fetchEmojis = async () => {
@@ -33,12 +38,6 @@ export const EmojiList: React.FC<EmojiListProps> = ({ newEmoji }) => {
     fetchEmojis();
   }, []);
 
-  useEffect(() => {
-    if (newEmoji) {
-      setEmojis(prevEmojis => [newEmoji, ...prevEmojis]);
-    }
-  }, [newEmoji]);
-
   const handleDownload = async (emojiUrl: string, emotion: string) => {
     try {
       const response = await fetch(emojiUrl);
@@ -56,6 +55,10 @@ export const EmojiList: React.FC<EmojiListProps> = ({ newEmoji }) => {
     }
   };
 
+  const handleDislike = (emojiId: string) => {
+    router.push(`/dashboard?regenerate=${emojiId}`);
+  };
+
   if (isLoading) {
     return <p>Loading your emojis...</p>;
   }
@@ -69,27 +72,42 @@ export const EmojiList: React.FC<EmojiListProps> = ({ newEmoji }) => {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {emojis.map((emoji) => (
-        <div key={emoji.id} className="flex flex-col items-center">
-          <div className="relative">
+        <div key={emoji.id} className="flex flex-col items-center bg-card rounded-lg p-4 shadow-md">
+          <div className="relative w-40 h-40 mb-4">
             <Image 
               src={emoji.imageUrl} 
               alt={emoji.emotion} 
-              width={64} 
-              height={64} 
-              className="rounded-full"
+              layout="fill"
+              objectFit="contain"
+              className="rounded-lg"
             />
+          </div>
+          <p className="text-lg font-semibold mb-2">{emoji.emotion}</p>
+          <div className="flex space-x-2">
             <Button
-              size="icon"
-              variant="ghost"
-              className="absolute -top-2 -right-2"
+              size="sm"
+              variant="outline"
               onClick={() => handleDownload(emoji.imageUrl, emoji.emotion)}
             >
-              <Download className="h-4 w-4" />
+              <Download className="h-4 w-4 mr-1" /> Download
             </Button>
+            {showActions && (
+              <>
+                <Button size="sm" variant="outline">
+                  <Heart className="h-4 w-4 mr-1" /> Like
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => handleDislike(emoji.id)}
+                >
+                  <ThumbsDown className="h-4 w-4 mr-1" /> Dislike
+                </Button>
+              </>
+            )}
           </div>
-          <p className="mt-2 text-sm">{emoji.emotion}</p>
         </div>
       ))}
     </div>
