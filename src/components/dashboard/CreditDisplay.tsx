@@ -1,20 +1,14 @@
 import React from 'react';
-import { Button } from "@/components/ui/button";
+import { useCredits } from '@/hooks/useCredits';
+import { CreditPurchaseModal } from '../CreditPurchaseModal';
 
-interface CreditDisplayProps {
-  credits: number;
-}
-
-export const CreditDisplay: React.FC<CreditDisplayProps> = ({ credits }) => {
-  const handlePurchaseCredits = () => {
-    // Implement credit purchase logic here
-    console.log('Purchase credits');
-  };
+export const CreditDisplay: React.FC = () => {
+  const { credits } = useCredits();
 
   return (
     <div className="flex flex-col items-center">
       <p className="text-2xl font-bold mb-4">{credits} credits remaining</p>
-      <Button onClick={handlePurchaseCredits}>Purchase More Credits</Button>
+      <CreditPurchaseModal />
     </div>
   );
 };
