@@ -25,6 +25,7 @@ custom-emoji-generator/
 │   │   │   ├── Features.tsx
 │   │   │   ├── Hero.tsx
 │   │   │   └── Pricing.tsx
+│   │   │   └── PublicEmojiShowcase.tsx
 │   │   ├── layout/
 │   │   │   ├── Footer.tsx
 │   │   │   ├── Header.tsx

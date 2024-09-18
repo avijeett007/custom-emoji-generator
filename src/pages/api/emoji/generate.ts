@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { IncomingForm, Fields, Files, File } from 'formidable';
 import { fal } from "@/lib/fal";
 import { getAuth } from "@clerk/nextjs/server";
 import prisma from "@/lib/db";
+import { UTApi } from "uploadthing/server";
+import formidable from 'formidable';
 import fs from 'fs/promises';
 
 export const config = {
@@ -11,7 +12,9 @@ export const config = {
   },
 };
 
-interface FalResponse {
+const utapi = new UTApi();
+
+interface FalAIResponse {
   sticker_image: {
     url: string;
   };
@@ -43,16 +46,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(403).json({ error: 'Not enough credits' });
     }
 
-    const form = new IncomingForm();
-    const [fields, files] = await new Promise<[Fields, Files]>((resolve, reject) => {
+    const form = formidable();
+    const [fields, files] = await new Promise<[formidable.Fields, formidable.Files]>((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
         if (err) reject(err);
         resolve([fields, files]);
       });
     });
 
-    const file = (files.file as File[])?.[0];
-    const emotion = (fields.emotion as string[])?.[0];
+    const file = files.file?.[0] as formidable.File | undefined;
+    const emotion = fields.emotion?.[0];
 
     if (!file || !emotion) {
       return res.status(400).json({ error: 'Missing file or emotion' });
@@ -62,34 +65,54 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const fileContent = await fs.readFile(file.filepath);
 
     // Upload file to FAL
-    const imageUrl = await fal.storage.upload(new Blob([fileContent]));
+    const falUploadResponse = await fal.storage.upload(new Blob([fileContent]));
 
-    // Generate emoji
+    // Generate emoji using FAL AI
     const result = await fal.subscribe("fal-ai/face-to-sticker", {
       input: {
-        image_url: imageUrl,
+        image_url: falUploadResponse,
         prompt: emotion,
         image_size: "square",
-        num_inference_steps: 20,
+        num_inference_steps: 10,
         guidance_scale: 7.5,
       },
-    }) as FalResponse; // Type assertion here
+    }) as FalAIResponse;
 
-    // Decrease credits for non-premium users
+    // Upload generated emoji to UploadThing
+    const emojiResponse = await fetch(result.sticker_image.url);
+    const emojiBlob = await emojiResponse.blob();
+    const emojiFile = new File([emojiBlob], `emoji_${Date.now()}.png`, { type: 'image/png' });
+    const uploadedFile = await utapi.uploadFiles([emojiFile]);
+
+    if (!uploadedFile[0] || !uploadedFile[0].data) {
+      throw new Error('Failed to upload generated emoji');
+    }
+
+    const emojiUrl = uploadedFile[0].data.url;
+
+    // Decrease credits for non-premium users and save emoji data
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
-      data: { credits: { decrement: 1 } },
+      data: { 
+        credits: { decrement: 1 },
+        emojis: {
+          create: {
+            imageUrl: emojiUrl,
+            emotion: emotion,
+            isPublic: user.tier === 'FREE'
+          }
+        }
+      },
       select: { credits: true, tier: true },
     });
 
     res.status(200).json({
-      message: 'Emoji generated successfully',
-      sticker_image: result.sticker_image,
-      sticker_image_background_removed: result.sticker_image_background_removed,
+      message: 'Emoji generated and uploaded successfully',
+      emojiUrl: emojiUrl,
       creditsRemaining: updatedUser.tier === 'PREMIUM' ? 'Unlimited' : updatedUser.credits,
     });
   } catch (error) {
-    console.error('Error generating emoji:', error);
-    res.status(500).json({ error: 'Failed to generate emoji' });
+    console.error('Error generating and uploading emoji:', error);
+    res.status(500).json({ error: 'Failed to generate and upload emoji' });
   }
 }

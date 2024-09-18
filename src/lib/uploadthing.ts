@@ -1,13 +1,19 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
- 
+
 const f = createUploadthing();
- 
+
 export const ourFileRouter = {
-  imageUploader: f({ image: { maxFileSize: "4MB" } })
+  emojiUploader: f({ image: { maxFileSize: "4MB" } })
+    .middleware(async () => {
+      // This code runs on your server before upload
+      return { userId: "user_id" }; // Replace with actual user ID when implemented
+    })
     .onUploadComplete(async ({ metadata, file }) => {
-      // Handle the uploaded file
-      console.log("file url", file.url);
+      // This code RUNS ON YOUR SERVER after upload
+      console.log("Upload complete for userId:", metadata.userId);
+      console.log("File URL:", file.url);
+      return { uploadedBy: metadata.userId };
     }),
 } satisfies FileRouter;
- 
+
 export type OurFileRouter = typeof ourFileRouter;
