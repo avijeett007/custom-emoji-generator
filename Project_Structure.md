@@ -4,6 +4,8 @@
 custom-emoji-generator/
 ├── prisma/
 │   └── schema.prisma
+├── scripts/
+│   ├── test-cron.ts
 ├── public/
 │   ├── favicon.ico
 │   └── images/
@@ -38,12 +40,15 @@ custom-emoji-generator/
 │   │   │   ├── card.tsx
 │   │   │   ├── checkbox.tsx
 │   │   │   └── label.tsx
+│   │   ├── CreditPurchaseModal.tsx
+│   │   ├── AnimatedCreditDisplay.tsx
 │   │   ├── UserProfile.tsx
 │   │   ├── ThemeToggle.tsx
-│   │   └── CreditPurchaseModal.tsx  // New component
 │   ├── hooks/
 │   │   ├── useCredits.ts
 │   │   └── useEmojiGeneration.ts
+│   ├── contexts/
+│   │   ├── CreditContext.tsx
 │   ├── lib/
 │   │   ├── db.ts
 │   │   ├── uploadthing.ts
@@ -54,6 +59,8 @@ custom-emoji-generator/
 │   │   ├── api/
 │   │   │   ├── auth/
 │   │   │   │   ├── [...clerk].ts
+│   │   │   ├── cron/
+│   │   │   │   ├── reset-premium-credits.ts
 │   │   │   ├── emoji/
 │   │   │   │   ├── generate.ts
 │   │   │   │   └── list.ts
@@ -61,7 +68,8 @@ custom-emoji-generator/
 │   │   │   │   └── purchase.ts
 │   │   │   │   └── index.ts
 │   │   │   ├── webhooks/
-│   │   │   │   └── stripe.ts  // New file for Stripe webhook
+│   │   │   │   └── clerk.ts
+│   │   │   │   └── stripe.ts   // New file for Stripe webhook
 │   │   │   └── uploadthing.ts
 │   │   ├── sign-in/
 │   │   │   └── [[...index]].tsx
@@ -95,22 +103,11 @@ custom-emoji-generator/
 └── tsconfig.json
 ```
 
-This updated structure reflects the recent changes and additions to the Custom Emoji Generator application. Key updates include:
-
-- New components:
-  - `src/components/layout/DashboardLayout.tsx`: The new layout component for the dashboard.
-  - `src/components/ThemeToggle.tsx`: The dark mode toggle component.
-  - `src/components/ui/checkbox.tsx` and `src/components/ui/label.tsx`: New UI components from shadcn/ui.
-
-- Updated files:
-  - `src/pages/_app.tsx`: Now includes the ThemeProvider for dark mode support.
-  - `src/components/emoji/EmojiGenerator.tsx`: Updated with new file upload logic and UI improvements.
-
 The overall structure remains organized and scalable, with components, hooks, and pages clearly separated. This structure supports the application's features, including:
 
 - User authentication and dashboard
 - Emoji generation and management
-- Credit system
+- Credit system with Stripe Payment
 - Theme toggling (dark/light mode)
 - Responsive layout for various screen sizes
 

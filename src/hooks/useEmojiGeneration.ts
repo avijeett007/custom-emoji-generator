@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { fal } from '@/lib/fal';
+import { useCredits } from './useCredits';
 
 interface GeneratedEmoji {
   sticker_image: {
@@ -10,10 +11,15 @@ interface GeneratedEmoji {
   };
 }
 
+interface ApiResponse extends GeneratedEmoji {
+  creditsRemaining: number;
+}
+
 export const useEmojiGeneration = () => {
   const [generatedEmoji, setGeneratedEmoji] = useState<GeneratedEmoji | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { setCredits } = useCredits();
 
   const generateEmoji = async (file: File, prompt: string) => {
     setIsLoading(true);
@@ -24,20 +30,26 @@ export const useEmojiGeneration = () => {
       const imageUrl = await fal.storage.upload(file);
 
       // Generate the emoji
-      const result = await fal.subscribe("fal-ai/face-to-sticker", {
-        input: {
+      const response = await fetch('/api/emoji/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           image_url: imageUrl,
           prompt,
-          image_size: "square", // This generates a square image
-          num_inference_steps: 20, // Increase steps for better quality
-          guidance_scale: 7.5, // Adjust guidance scale for better results
-        },
+        }),
       });
 
-      // Type assertion
-      const typedResult = result as GeneratedEmoji;
+      if (!response.ok) {
+        throw new Error('Failed to generate emoji');
+      }
 
-      setGeneratedEmoji(typedResult);
+      const result = await response.json() as ApiResponse;
+
+      setGeneratedEmoji(result);
+      setCredits(result.creditsRemaining);
+
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
