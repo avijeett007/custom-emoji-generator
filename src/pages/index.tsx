@@ -1,3 +1,5 @@
+// src/pages/index.tsx
+
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -9,13 +11,8 @@ import { Hero } from '@/components/landing/Hero'
 import { Features } from '@/components/landing/Features'
 import { Pricing } from '@/components/landing/Pricing'
 import { PublicEmojiShowcase } from '@/components/landing/PublicEmojiShowcase'
-import prisma from '@/lib/db'
 
-interface HomeProps {
-  publicEmojis: Array<{ id: string; imageUrl: string; emotion: string }>;
-}
-
-const Home: NextPage<HomeProps> = ({ publicEmojis }) => {
+const Home: NextPage = () => {
   const { isSignedIn, isLoaded } = useUser();
 
   return (
@@ -53,7 +50,12 @@ const Home: NextPage<HomeProps> = ({ publicEmojis }) => {
       <main className="flex-grow">
         <Hero />
         <Features />
-        <PublicEmojiShowcase emojis={publicEmojis} />
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-8">Created by Our Community</h2>
+            <PublicEmojiShowcase />
+          </div>
+        </section>
         <Pricing />
       </main>
 
@@ -64,20 +66,6 @@ const Home: NextPage<HomeProps> = ({ publicEmojis }) => {
       </footer>
     </div>
   )
-}
-
-export async function getServerSideProps() {
-  const publicEmojis = await prisma.emoji.findMany({
-    where: { isPublic: true },
-    select: { id: true, imageUrl: true, emotion: true },
-    take: 12, // Limit to 12 emojis for the showcase
-  });
-
-  return {
-    props: {
-      publicEmojis,
-    },
-  };
 }
 
 export default Home

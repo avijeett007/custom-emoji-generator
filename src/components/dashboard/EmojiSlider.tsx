@@ -1,7 +1,8 @@
 // src/components/dashboard/EmojiSlider.tsx
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Emoji } from '@/types/emoji';
 import { Download, Heart, ThumbsDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -50,58 +51,59 @@ export const EmojiSlider: React.FC<EmojiSliderProps> = ({ newEmoji }) => {
     router.push('/dashboard');
   };
 
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % emojis.length);
+  }, [emojis.length]);
+
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 3000); // Change slide every 3 seconds
+    return () => clearInterval(interval);
+  }, [nextSlide]);
+
+  if (emojis.length === 0) {
+    return <p className="text-center text-lg">You haven't created any emoji yet!</p>;
+  }
+
   return (
-    <div className="relative overflow-hidden">
-      <motion.div
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.05}
-        onDragEnd={(e, { offset, velocity }) => {
-          const swipe = offset.x * velocity.x;
-          if (swipe < -10000) {
-            setCurrentIndex(prev => (prev + 1) % emojis.length);
-          } else if (swipe > 10000) {
-            setCurrentIndex(prev => (prev - 1 + emojis.length) % emojis.length);
-          }
-        }}
-        className="flex"
-      >
-        {emojis.map((emoji, index) => (
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-md"> {/* Adjusted width for better responsiveness */}
+        <AnimatePresence mode="wait">
           <motion.div
-            key={emoji.id}
-            className="w-full flex-shrink-0"
-            style={{ x: `${(index - currentIndex) * 100}%` }}
+            key={currentIndex}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center"
           >
-            <div className="relative w-64 h-64 mx-auto">
+            <div className="relative w-40 h-40 mb-2">
               <Image
-                src={emoji.imageUrl}
-                alt={emoji.emotion}
+                src={emojis[currentIndex].imageUrl}
+                alt={emojis[currentIndex].emotion}
                 layout="fill"
                 objectFit="contain"
                 className="rounded-lg"
               />
-              <div className="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-50 text-white text-center rounded-b-lg">
-                {emoji.emotion}
-              </div>
             </div>
-            <div className="flex justify-center mt-4 space-x-4">
+            <p className="text-center mb-2 text-sm">{emojis[currentIndex].emotion}</p>
+            <div className="flex justify-center space-x-2">
               <Button
-                size="icon"
+                size="sm"
                 variant="outline"
-                onClick={() => handleDownload(emoji.imageUrl, emoji.emotion)}
+                onClick={() => handleDownload(emojis[currentIndex].imageUrl, emojis[currentIndex].emotion)}
               >
                 <Download className="h-4 w-4" />
               </Button>
-              <Button size="icon" variant="outline">
+              <Button size="sm" variant="outline">
                 <Heart className="h-4 w-4" />
               </Button>
-              <Button size="icon" variant="outline" onClick={handleDislike}>
+              <Button size="sm" variant="outline" onClick={handleDislike}>
                 <ThumbsDown className="h-4 w-4" />
               </Button>
             </div>
           </motion.div>
-        ))}
-      </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

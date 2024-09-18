@@ -1,3 +1,5 @@
+// src/contexts/CreditContext.tsx
+
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 

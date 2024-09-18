@@ -1,3 +1,5 @@
+// src/components/emoji/EmojiGenerator.tsx
+
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
@@ -56,8 +58,8 @@ export const EmojiGenerator: React.FC<EmojiGeneratorProps> = ({ onEmojiGenerated
       setError('Please select an emotion.');
       return;
     }
-    if (state.credits <= 0) {
-      setError('Not enough credits. Please purchase more. Premium members get twice more credit.');
+    if (state.credits <= 0 && state.tier !== 'PREMIUM') {
+      setError('Not enough credits. Please purchase more. Premium members get unlimited credits.');
       return;
     }
 
@@ -85,7 +87,6 @@ export const EmojiGenerator: React.FC<EmojiGeneratorProps> = ({ onEmojiGenerated
         dispatch({ type: 'SET_CREDITS', payload: result.creditsRemaining });
       }
 
-      // Call the callback function with the new emoji
       onEmojiGenerated({
         id: result.id,
         userId: result.userId,
@@ -170,7 +171,7 @@ export const EmojiGenerator: React.FC<EmojiGeneratorProps> = ({ onEmojiGenerated
         <Button 
           onClick={handleGenerate} 
           className="w-full"
-          disabled={isLoading || !file || !selectedEmotion || (state.credits <= 0 && state.tier !== 'PREMIUM')}
+          disabled={isLoading || !file || !selectedEmotion || (state.credits <= 0)}
         >
           {isLoading ? 'Generating...' : 'Generate Emoji'}
         </Button>
