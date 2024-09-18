@@ -4,15 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useEmojiGeneration } from '@/hooks/useEmojiGeneration';
+import { useCredits } from '@/contexts/CreditContext';
 import { Download } from 'lucide-react';
 import Image from 'next/image';
+import { CreditPurchaseModal } from '../CreditPurchaseModal';
+import { AnimatedCreditDisplay } from '../AnimatedCreditDisplay';
+
+interface GeneratedEmoji {
+  sticker_image: {
+    url: string;
+  };
+  sticker_image_background_removed: {
+    url: string;
+  };
+  creditsRemaining: number | 'Unlimited';
+}
 
 export const EmojiGenerator: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
+  const [generatedEmoji, setGeneratedEmoji] = useState<GeneratedEmoji | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { generatedEmoji, isLoading, error, generateEmoji } = useEmojiGeneration();
+  const { state, dispatch } = useCredits();
 
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -27,9 +42,40 @@ export const EmojiGenerator: React.FC = () => {
     fileInputRef.current?.click();
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (file && selectedEmotion) {
-      generateEmoji(file, selectedEmotion);
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('emotion', selectedEmotion);
+
+        const response = await fetch('/api/emoji/generate', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to generate emoji');
+        }
+
+        const result: GeneratedEmoji = await response.json();
+        setGeneratedEmoji(result);
+        
+        // Update credits immediately after generation
+        if (typeof result.creditsRemaining === 'number') {
+          dispatch({ type: 'SET_CREDITS', payload: result.creditsRemaining });
+        } else if (result.creditsRemaining === 'Unlimited') {
+          // Handle the case for premium users if needed
+          // For example, you might want to update some state to reflect unlimited usage
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -71,7 +117,10 @@ export const EmojiGenerator: React.FC = () => {
       transition={{ duration: 0.5 }}
       className="space-y-4 p-6 bg-card rounded-lg shadow-lg"
     >
-      <h2 className="text-2xl font-bold">Create Emoji</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Create Emoji</h2>
+        <AnimatedCreditDisplay />
+      </div>
       <div className="flex items-center space-x-2">
         <Input
           type="text"
@@ -102,10 +151,20 @@ export const EmojiGenerator: React.FC = () => {
         ))}
       </div>
       <div className="flex items-center space-x-4">
-        <Button onClick={handleGenerate} className="ml-auto" disabled={isLoading || !file || !selectedEmotion}>
+        <Button 
+          onClick={handleGenerate} 
+          className="ml-auto" 
+          disabled={isLoading || !file || !selectedEmotion || (state.credits <= 0 && state.tier !== 'PREMIUM')}
+        >
           {isLoading ? 'Generating...' : 'Generate Emoji'}
         </Button>
       </div>
+      {state.credits <= 0 && state.tier !== 'PREMIUM' && (
+        <div className="text-red-500">
+          You've run out of credits. Please purchase more credits or upgrade to Premium.
+          <CreditPurchaseModal tier={state.tier} />
+        </div>
+      )}
       {error && <p className="text-red-500">{error}</p>}
       {generatedEmoji && (
         <div className="mt-4 space-y-4">
