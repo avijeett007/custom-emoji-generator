@@ -6,7 +6,7 @@ Set up authentication with Clerk - Done
 Implement the landing page - Done
 Create the dashboard page - Done
 Develop the emoji generation feature - Done
-Implement the credit system
+Implement the credit system - Partially Done. Need to update credit deduction properly.
 Add file upload functionality with UploadThing
 Create user profile management
 Implement the public emoji showcase
@@ -43,7 +43,7 @@ Finalize and optimize the application
 - Create src/hooks/useEmojiGeneration.ts
 
 
-### Implement the credit system:
+### Implement the credit system: - Partially Done. Need to update credit deduction properly.
 
 - Update Prisma schema for user credits
 - Create src/hooks/useCredits.ts

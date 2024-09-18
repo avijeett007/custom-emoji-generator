@@ -27,7 +27,7 @@ custom-emoji-generator/
 │   │   │   ├── Footer.tsx
 │   │   │   ├── Header.tsx
 │   │   │   ├── Layout.tsx
-│   │   │   └── DashboardLayout.tsx  // New component
+│   │   │   └── DashboardLayout.tsx
 │   │   ├── profile/
 │   │   │   └── ProfileForm.tsx
 │   │   ├── ui/
@@ -36,33 +36,38 @@ custom-emoji-generator/
 │   │   │   ├── dialog.tsx
 │   │   │   ├── dropdown-menu.tsx
 │   │   │   ├── card.tsx
-│   │   │   ├── checkbox.tsx  // New component
-│   │   │   └── label.tsx  // New component
+│   │   │   ├── checkbox.tsx
+│   │   │   └── label.tsx
 │   │   ├── UserProfile.tsx
-│   │   └── ThemeToggle.tsx  // New component
+│   │   ├── ThemeToggle.tsx
+│   │   └── CreditPurchaseModal.tsx  // New component
 │   ├── hooks/
 │   │   ├── useCredits.ts
 │   │   └── useEmojiGeneration.ts
 │   ├── lib/
 │   │   ├── db.ts
 │   │   ├── uploadthing.ts
-│   │   └── utils.ts
-│   │   └── fal.ts
+│   │   ├── utils.ts
+│   │   ├── fal.ts
+│   │   └── stripe.ts  // New file for Stripe configuration
 │   ├── pages/
 │   │   ├── api/
 │   │   │   ├── auth/
-│   │   │   │   └── [...clerk].ts
+│   │   │   │   ├── [...clerk].ts
 │   │   │   ├── emoji/
 │   │   │   │   ├── generate.ts
 │   │   │   │   └── list.ts
 │   │   │   ├── credits/
 │   │   │   │   └── purchase.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── webhooks/
+│   │   │   │   └── stripe.ts  // New file for Stripe webhook
 │   │   │   └── uploadthing.ts
 │   │   ├── sign-in/
 │   │   │   └── [[...index]].tsx
 │   │   ├── sign-up/
 │   │   │   └── [[...index]].tsx
-│   │   ├── _app.tsx  // Updated with ThemeProvider
+│   │   ├── _app.tsx
 │   │   ├── dashboard.tsx
 │   │   ├── index.tsx
 │   │   ├── profile.tsx
@@ -86,6 +91,7 @@ custom-emoji-generator/
 ├── package.json
 ├── README.md
 ├── tailwind.config.js
+├── micro-cors.d.ts
 └── tsconfig.json
 ```
 
